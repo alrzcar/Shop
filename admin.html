@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم متجر زيوت السيارات</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* الهيدر */
+        header {
+            background: linear-gradient(135deg, #1a3a5f, #2c5282);
+            color: white;
+            padding: 25px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-title {
+            font-size: 2em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .admin-icon {
+            font-size: 1.2em;
+        }
+        
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* لوحة التحكم */
+        .admin-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: #1a3a5f;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2c5282;
+        }
+        
+        /* النماذج */
+        .admin-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1a3a5f;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #2c5282;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        /* الأزرار */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #2c5282;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1a3a5f;
+        }
+        
+        .btn-success {
+            background: #38a169;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #2f855a;
+        }
+        
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c53030;
+        }
+        
+        .btn-warning {
+            background: #dd6b20;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #c05621;
+        }
+        
+        /* قائمة المنتجات */
+        .products-list {
+            margin-top: 30px;
+        }
+        
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background: #fafafa;
+            transition: background 0.3s;
+        }
+        
+        .product-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .product-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-left: 20px;
+            border: 2px solid #ddd;
+        }
+        
+        .product-details h3 {
+            margin-bottom: 5px;
+            color: #1a3a5f;
+        }
+        
+        .product-details p {
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #e53e3e;
+            font-size: 1.2em;
+        }
+        
+        .product-category-badge {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* التنبيهات */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #feb2b2;
+        }
+        
+        /* حالة عدم وجود منتجات */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718096;
+        }
+        
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #1a3a5f;
+        }
+        
+        /* التجاوب مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .admin-title {
+                font-size: 1.7em;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .product-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="admin-header">
+                <div class="admin-title">
+                    <span class="admin-icon">⚙️</span>
+                    لوحة تحكم متجر زيوت السيارات
+                </div>
+                <a href="index.html" class="back-link">العودة للموقع الرئيسي</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="alert" id="alert-message"></div>
+        
+        <div class="admin-panel">
+            <h2 class="section-title">إضافة منتج جديد</h2>
+            <form id="add-product-form" class="admin-form">
+                <div class="form-group">
+                    <label for="product-name">اسم المنتج *</label>
+                    <input type="text" id="product-name" required placeholder="أدخل اسم المنتج">
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-description">وصف المنتج</label>
+                    <textarea id="product-description" placeholder="أدخل وصف للمنتج (اختياري)"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-price">السعر (ليرة سورية) *</label>
+                        <input type="text" id="product-price" required placeholder="مثال: 125,000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-category">الفئة *</label>
+                        <select id="product-category" required>
+                            <option value="">اختر الفئة</option>
+                            <option value="زيت محرك">زيت المحرك</option>
+                            <option value="شحوم">شحوم</option>
+                            <option value="فلاتر">فلاتر</option>
+                            <option value="مصافي زيت">مصافي زيت</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-image">رابط الصورة *</label>
+                    <input type="url" id="product-image" required placeholder="https://example.com/image.jpg">
+                    <small style="color: #666; margin-top: 5px; display: block;">
+                        يمكنك استخدام خدمات مثل Imgur لرفع الصور والحصول على رابط
+                    </small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">إضافة المنتج</button>
+            </form>
+        </div>
+        
+        <div class="admin-panel">
+            <h2 class="section-title">المنتجات الحالية</h2>
+            
+            <div class="products-list" id="products-container">
+                <!-- سيتم تحميل المنتجات هنا -->
+            </div>
+            
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <h3>لا توجد منتجات حالياً</h3>
+                <p>ابدأ بإضافة منتج جديد باستخدام النموذج أعلاه</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // عرض التنبيهات
+        function showAlert(message, type) {
+            const alertElement = document.getElementById('alert-message');
+            alertElement.textContent = message;
+            alertElement.className = `alert alert-${type}`;
+            alertElement.style.display = 'block';
+            
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 4000);
+        }
+        
+        // تحميل المنتجات
+        function loadProducts() {
+            const products = JSON.parse(localStorage.getItem('car_oil_products')) || [];
+            const productsContainer = document.getElementById('products-container');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (products.length === 0) {
+                productsContainer.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            productsContainer.innerHTML = '';
+            emptyState.style.display = 'none';
+            
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <div class="product-info">
+                        <img src="${product.image}" alt="${product.name}" class="product-image"
+                             onerror="this.src='https://via.placeholder.com/80x80/2c5282/ffffff?text=صورة'">
+                        <div class="product-details">
+                            <h3>${product.name}</h3>
+                            <p>${product.description || 'لا يوجد وصف'}</p>
+                            <div class="product-price">${product.price} ل.س</div>
+                            <span class="product-category-badge">${product.category}</span>
+                            <small style="display: block; margin-top: 5px; color: #718096;">الكود: ${product.id}</small>
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-warning" onclick="editProduct(${product.id})">تعديل</button>
+                        <button class="btn btn-danger" onclick="deleteProduct(${product.id})">حذف</button>
+                    </div>
+                `;
+                productsContainer.appendChild(productItem);
+            });
+        }
+        
+        // إضافة منتج جديد
+        document.getElementById('add-product-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('product-name').value.trim();
+            const description = document.getElementById('product-description').value.trim();
+            const price = document.getElementById('product-price').value.trim();
+            const category = document.getElementById('product-category').value;
+            const image = document.getElementById('product-image').value.trim();
+            
+            if (!name || !price || !category || !image) {
+                showAlert('يرجى ملء جميع الحقول الإلزامية', 'error');
+                return;
+            }
+            
+            // التحقق من صيغة السعر
+            if (!/^[\d,]+$/.test(price)) {
+                showAlert('يرجى إدخال سعر صحيح (أرقام وفواصل فقط)', 'error');
+                return;
+            }
+            
+            const products = JSON.parse(localStorage.getItem('car_oil_products')) || [];
+            const newProduct = {
+                id: Date.now(),
+                name,
+                description,
+                price,
+                category,
+                image
+            };
+            
+            products.push(newProduct);
+            localStorage.setItem('car_oil_products', JSON.stringify(products));
+            
+            showAlert('تم إضافة المنتج بنجاح', 'success');
+            this.reset();
+            loadProducts();
+        });
+        
+        // تعديل منتج
+        function editProduct(productId) {
+            const products = JSON.parse(localStorage.getItem('car_oil_products')) || [];
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) return;
+            
+            const newName = prompt('اسم المنتج الجديد:', product.name);
+            if (newName === null) return;
+            
+            const newDescription = prompt('الوصف الجديد:', product.description || '');
+            const newPrice = prompt('السعر الجديد (ل.س):', product.price);
+            const newCategory = prompt('الفئة الجديدة:', product.category);
+            const newImage = prompt('رابط الصورة الجديد:', product.image);
+            
+            if (newName && newPrice && newCategory && newImage) {
+                if (!/^[\d,]+$/.test(newPrice)) {
+                    showAlert('يرجى إدخال سعر صحيح (أرقام وفواصل فقط)', 'error');
+                    return;
+                }
+                
+                product.name = newName;
+                product.description = newDescription;
+                product.price = newPrice;
+                product.category = newCategory;
+                product.image = newImage;
+                
+                localStorage.setItem('car_oil_products', JSON.stringify(products));
+                showAlert('تم تعديل المنتج بنجاح', 'success');
+                loadProducts();
+            } else {
+                showAlert('لم يتم التعديل. تأكد من ملء جميع الحقول', 'error');
+            }
+        }
+        
+        // حذف منتج
+        function deleteProduct(productId) {
+            if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+            
+            const products = JSON.parse(localStorage.getItem('car_oil_products')) || [];
+            const filteredProducts = products.filter(p => p.id !== productId);
+            
+            localStorage.setItem('car_oil_products', JSON.stringify(filteredProducts));
+            showAlert('تم حذف المنتج بنجاح', 'success');
+            loadProducts();
+        }
+        
+        // تحميل البيانات عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+        });
+    </script>
+</body>
+</html>
